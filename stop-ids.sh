@@ -1,6 +1,10 @@
 #!/bin/bash
 
-echo "Stopping IDS Services..."
+echo "Stopping AI-Powered IDS Services..."
+
+# Stop AI service first
+echo "Stopping Ollama AI service..."
+pkill -f "ollama serve"
 
 # Force stop all services
 echo "Stopping Suricata..."
@@ -36,4 +40,13 @@ done
 echo ""
 echo "Checking for remaining processes:"
 echo "================================="
-ps aux | grep -E "(elasticsearch|kibana|logstash|suricata)" | grep -v grep || echo "No IDS processes found"
+ps aux | grep -E "(elasticsearch|kibana|logstash|suricata|ollama)" | grep -v grep || echo "No IDS processes found"
+
+echo ""
+echo "AI service status:"
+echo "=================="
+if pgrep -f "ollama serve" > /dev/null; then
+    echo "✗ Ollama AI service is still running"
+else
+    echo "✓ Ollama AI service is stopped"
+fi

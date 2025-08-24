@@ -1,12 +1,31 @@
 #!/bin/bash
 
-echo "Starting IDS Services..."
+echo "Starting AI-Powered IDS Services..."
 
-# Copy configuration files to proper locations
-sudo cp /home/asmae/kibana.yml /etc/kibana/
-sudo cp /home/asmae/logstash.conf /etc/logstash/conf.d/
-sudo cp /home/asmae/suricata.yaml /etc/suricata/
-sudo cp /home/asmae/custom.rules /etc/suricata/rules/
+# Check if configuration files are properly symlinked
+echo "Verifying configuration symlinks..."
+if [[ ! -L /etc/kibana/kibana.yml ]]; then
+    echo "⚠️  Warning: kibana.yml not symlinked"
+fi
+if [[ ! -L /etc/logstash/conf.d/logstash.conf ]]; then
+    echo "⚠️  Warning: logstash.conf not symlinked"
+fi
+if [[ ! -L /etc/suricata/suricata.yaml ]]; then
+    echo "⚠️  Warning: suricata.yaml not symlinked"
+fi
+if [[ ! -L /etc/suricata/rules/custom.rules ]]; then
+    echo "⚠️  Warning: custom.rules not symlinked"
+fi
+
+# Start Ollama AI service
+echo "Starting Ollama AI service..."
+if ! pgrep -f "ollama serve" > /dev/null; then
+    ollama serve &
+    sleep 5
+    echo "✓ Ollama AI service started"
+else
+    echo "✓ Ollama AI service already running"
+fi
 
 # Create log directories
 sudo mkdir -p /var/log/suricata
@@ -78,8 +97,15 @@ echo "============"
 echo "Elasticsearch: https://localhost:9200 (elastic:6xdx8y-=dLZHdeH4EEm6)"
 echo "Kibana: http://localhost:5601"
 echo ""
+echo "AI-Enhanced Tools:"
+echo "=================="
+echo "AI-IDS Manager: /opt/ai-ids/ai-ids-manager"
+echo "Traffic Analyzer: /opt/ai-ids/analyze-traffic"
+echo "APT Simulator: /opt/ai-ids/apt-simulator"
+echo ""
 echo "Log files:"
 echo "=========="
 echo "Suricata EVE: /var/log/suricata/eve.json"
 echo "Suricata Fast: /var/log/suricata/fast.log"
 echo "Suricata Main: /var/log/suricata/suricata.log"
+echo "Generated Rules: /home/asmae/ids/generated-rules-*.rules"
