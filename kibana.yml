@@ -1,0 +1,6 @@
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["https://localhost:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "zjfl+ZnIbm8qDYnJX*=j"
+elasticsearch.ssl.verificationMode: none

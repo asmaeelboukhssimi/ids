@@ -1,0 +1,28 @@
+# SQLMap Detection Rules
+alert tcp any any -> any any (msg:"SQLMap User-Agent Detected"; content:"User-Agent: sqlmap"; nocase; classtype:web-application-attack; sid:1000001; rev:1;)
+alert tcp any any -> any any (msg:"SQLMap Cookie Parameter"; content:"Cookie:"; content:"sqlmap"; distance:0; within:100; nocase; classtype:web-application-attack; sid:1000002; rev:1;)
+
+# Nikto Detection Rules  
+alert tcp any any -> any any (msg:"Nikto Scanner Detected"; content:"User-Agent: Mozilla/5.00 (Nikto"; nocase; classtype:web-application-attack; sid:1000003; rev:1;)
+alert tcp any any -> any any (msg:"Nikto Default User-Agent"; content:"User-Agent: Mozilla/5.00"; content:"Nikto"; distance:0; within:50; nocase; classtype:web-application-attack; sid:1000004; rev:1;)
+
+# SQL Injection Detection Rules
+alert tcp any any -> any any (msg:"SQL Injection UNION SELECT"; content:"UNION"; nocase; content:"SELECT"; distance:0; within:20; nocase; classtype:web-application-attack; sid:1000005; rev:1;)
+alert tcp any any -> any any (msg:"SQL Injection OR 1=1"; content:"OR 1=1"; nocase; classtype:web-application-attack; sid:1000006; rev:1;)
+alert tcp any any -> any any (msg:"SQL Injection ' OR '1'='1"; content:"' OR '1'='1"; nocase; classtype:web-application-attack; sid:1000007; rev:1;)
+alert tcp any any -> any any (msg:"SQL Injection DROP TABLE"; content:"DROP TABLE"; nocase; classtype:web-application-attack; sid:1000008; rev:1;)
+alert tcp any any -> any any (msg:"SQL Injection INFORMATION_SCHEMA"; content:"INFORMATION_SCHEMA"; nocase; classtype:web-application-attack; sid:1000009; rev:1;)
+alert tcp any any -> any any (msg:"SQL Injection version()"; content:"version()"; nocase; classtype:web-application-attack; sid:1000010; rev:1;)
+
+# XSS Detection Rules
+alert tcp any any -> any any (msg:"XSS Script Tag"; content:"<script"; nocase; classtype:web-application-attack; sid:1000011; rev:1;)
+alert tcp any any -> any any (msg:"XSS JavaScript Alert"; content:"javascript:alert"; nocase; classtype:web-application-attack; sid:1000012; rev:1;)
+alert tcp any any -> any any (msg:"XSS onload Event"; content:"onload="; nocase; classtype:web-application-attack; sid:1000013; rev:1;)
+alert tcp any any -> any any (msg:"XSS onerror Event"; content:"onerror="; nocase; classtype:web-application-attack; sid:1000014; rev:1;)
+alert tcp any any -> any any (msg:"XSS document.cookie"; content:"document.cookie"; nocase; classtype:web-application-attack; sid:1000015; rev:1;)
+alert tcp any any -> any any (msg:"XSS eval() Function"; content:"eval("; nocase; classtype:web-application-attack; sid:1000016; rev:1;)
+
+# Additional Web Attack Patterns
+alert tcp any any -> any any (msg:"Directory Traversal ../"; content:"../"; classtype:web-application-attack; sid:1000017; rev:1;)
+alert tcp any any -> any any (msg:"Command Injection /bin/sh"; content:"/bin/sh"; nocase; classtype:web-application-attack; sid:1000018; rev:1;)
+alert tcp any any -> any any (msg:"Command Injection cmd.exe"; content:"cmd.exe"; nocase; classtype:web-application-attack; sid:1000019; rev:1;)
