@@ -12,12 +12,17 @@ import time
 from datetime import datetime, timedelta
 from typing import Dict, List, Any
 import re
+import urllib3
+
+# Suppress SSL warnings for self-signed certificates
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class ElasticsearchAnalyzer:
     def __init__(self, es_host="localhost", es_port=9200):
         self.es_host = es_host
         self.es_port = es_port
-        self.base_url = f"http://{es_host}:{es_port}"
+        self.base_url = f"https://{es_host}:{es_port}"
+        self.auth = ("elastic", "6xdx8y-=dLZHdeH4EEm6")
         
     def query_recent_traffic(self, hours=24, size=1000):
         """Query recent traffic from Elasticsearch"""
@@ -50,6 +55,8 @@ class ElasticsearchAnalyzer:
                 f"{self.base_url}/suricata-*/_search",
                 headers={"Content-Type": "application/json"},
                 json=query,
+                auth=self.auth,
+                verify=False,  # Skip SSL verification for self-signed certs
                 timeout=30
             )
             response.raise_for_status()

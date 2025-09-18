@@ -28,7 +28,7 @@ class AIIDSManager:
         
         # Check Elasticsearch
         try:
-            result = subprocess.run(['curl', '-s', 'http://localhost:9200/_cluster/health'], 
+            result = subprocess.run(['curl', '-s', '-k', '-u', 'elastic:6xdx8y-=dLZHdeH4EEm6', 'https://localhost:9200/_cluster/health'], 
                                   capture_output=True, text=True, timeout=5)
             if result.returncode == 0:
                 print("✅ Elasticsearch is running")
@@ -238,6 +238,9 @@ class AIIDSManager:
             except KeyboardInterrupt:
                 print("\n\nGoodbye!")
                 break
+            except EOFError:
+                print("\n\nGoodbye!")
+                break
             except Exception as e:
                 print(f"Error: {e}")
 
@@ -266,4 +269,10 @@ def main():
         manager.interactive_mode()
 
 if __name__ == "__main__":
-    main()
+    # Allow direct testing
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == '--test-status':
+        manager = AIIDSManager()
+        manager.check_dependencies()
+    else:
+        main()
